@@ -1,26 +1,39 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useContext, useReducer} from 'react';
 import './App.css';
+import {UserContext} from './index';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const initialState = {
+  count: 0
+};
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "Increment":
+      return {
+        count: state.count + 1
+      }
+    case "Decrement":
+      return {
+        count: state.count - 1
+      }
+    case "Reset":
+      return initialState
+
+    default:
+      return initialState
+  }
 }
 
-export default App;
+export default function App(){
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const value = useContext(UserContext);
+  return (
+      <div>
+        <div>Hello, {value}</div>
+        Count: {state.count}
+        <button className="border m-1 p-1" onClick={() => dispatch({type: "Increment"})}>Increment</button>
+        <button className="border m-1 p-1" onClick={() => dispatch({type: "Decrement"})}>Decrement</button>
+        <button className="border m-1 p-1" onClick={() => dispatch({ type:"Reset" })}>Reset</button>
+      </div>
+  )
+}
